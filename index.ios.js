@@ -11,7 +11,6 @@ class mypace extends Component {
       // States
       isCalcButtonEnabled: false,
       isSaveButtonEnabled: false,
-      isSplitsButtonEnabled: false,
 
       // Settings
       kmVsMi: 'km',
@@ -180,8 +179,7 @@ class mypace extends Component {
 
     this.setState({
       isCalcButtonEnabled: (dist && time && !pace || dist && !time && pace || !dist && time && pace),
-      isSaveButtonEnabled: false,
-      isSplitsButtonEnabled: false
+      isSaveButtonEnabled: false
     });    
   };
 
@@ -198,8 +196,7 @@ class mypace extends Component {
 
     this.setState({
       isCalcButtonEnabled: false,
-      isSaveButtonEnabled: true,
-      isSplitsButtonEnabled: true
+      isSaveButtonEnabled: true
     });
   };
 
