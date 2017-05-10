@@ -35,16 +35,16 @@ class mypace extends Component {
 
 
   //
-  //  Distance
+  // Distance
   //
 
-  //  Get distance (in kilometers or miles)
+  // Get distance (in kilometers or miles)
 
   getDist = () => {
     return this.state.kmVsMi === 'mi' ? this.state.distance / this.unit.mile : this.state.distance / this.unit.kilometer;
   };
 
-  //  Set distance (distance = time / pace)
+  // Set distance (distance = time / pace)
 
   setDist = () => {
     let distance = this.getTime() && this.getPace() ? this.getTime() / this.getPace() : false;
@@ -54,27 +54,27 @@ class mypace extends Component {
     });
   };
 
-  //  Clear distance input field
+  // Clear distance input field
 
   clearDist = () => {
     this.setState({
       distance: null
-    });
+    }, () => this.updateStatus());
   };
 
 
 
   //
-  //  Time
+  // Time
   //
 
-  //  Get time (in seconds)
+  // Get time (in seconds)
 
   getTime = () => {
     return this.state.timeHours * this.unit.hour + this.state.timeMinutes * this.unit.minute + this.state.timeSeconds * this.unit.second;
   };
 
-  //  Set time (time = pace * distance)
+  // Set time (time = pace * distance)
 
   setTime = () => {
     let time = this.getPace() && this.getDist() ? this.getPace() * this.getDist() : false;
@@ -86,29 +86,29 @@ class mypace extends Component {
     });
   };
 
-  //  Clear time input fields
+  // Clear time input fields
 
   clearTime = () => {
     this.setState({
       timeHours: null,
       timeMinutes: null,
       timeSeconds: null
-    });
+    }, () => this.updateStatus());
   };
 
 
 
   //
-  //  Pace
+  // Pace
   //
 
-  //  Get total pace in seconds
+  // Get total pace in seconds
 
   getPace = () => {
     return this.state.paceHours * this.unit.hour + this.state.paceMinutes * this.unit.minute + this.state.paceSeconds * this.unit.second;
   };
 
-  //  Set pace (pace = time / distance)
+  // Set pace (pace = time / distance)
 
   setPace = () => {
     let pace = this.getTime() && this.getDist() ? this.getTime() / this.getDist() : false;
@@ -120,35 +120,35 @@ class mypace extends Component {
     });
   };
 
-  //  Clear pace input fields
+  // Clear pace input fields
 
   clearPace = () => {
     this.setState({
       paceHours: null,
       paceMinutes: null,
       paceSeconds: null
-    });
+    }, () => this.updateStatus());
   };
 
 
 
   //
-  //  Time conversions
+  // Time conversions
   //
 
-  //  Get hours output from seconds
+  // Get hours output from seconds
 
   getHours = (seconds) => {
     return Math.floor(seconds / this.unit.hour) ? Math.floor(seconds / this.unit.hour).toString() : "00";
   };
 
-  //  Get minutes output from seconds
+  // Get minutes output from seconds
 
   getMinutes = (seconds) => {
     return Math.floor((seconds % this.unit.hour) / this.unit.minute) ? Math.floor((seconds % this.unit.hour) / this.unit.minute).toString() : "00";
   };
 
-  //  Get seconds output from seconds
+  // Get seconds output from seconds
 
   getSeconds = (seconds) => {
     return (seconds % this.unit.minute) ? (seconds % this.unit.minute).toFixed(0).toString() : "00"
@@ -157,16 +157,16 @@ class mypace extends Component {
 
 
   //
-  //  User actions
+  // User actions
   //
 
-  //  Focus next input field
+  // Focus next input field
 
   focusNextField = (current) => {
     this.refs[current + 1].focus();
   };
 
-  //  Update calculate button status
+  // Update calculate button status
 
   updateStatus = () => {
     let dist = this.getDist() > 0, time = this.getTime() > 0, pace = this.getPace() > 0;
@@ -176,7 +176,7 @@ class mypace extends Component {
     });    
   };
 
-  //  Calculate distance, time or pace
+  // Calculate distance, time or pace
 
   calculate = () => {
     if (this.getDist() && this.getTime()) {
@@ -195,7 +195,7 @@ class mypace extends Component {
 
 
   //
-  //  Render
+  // Render
   //
 
   render() {
@@ -345,6 +345,12 @@ class mypace extends Component {
     );
   }
 }
+
+
+
+//
+// Styling
+//
 
 const styles = StyleSheet.create({
   container: {
