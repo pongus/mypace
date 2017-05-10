@@ -108,7 +108,7 @@ class mypace extends Component {
   // Pace
   //
 
-  // Get total pace in seconds
+  // Get pace (in seconds)
 
   getPace = () => {
     return this.state.paceHours * this.unit.hour + this.state.paceMinutes * this.unit.minute + this.state.paceSeconds * this.unit.second;
