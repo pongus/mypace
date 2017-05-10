@@ -1,5 +1,7 @@
+'use strict';
+
 import React, { Component } from 'react';
-import { AppRegistry, Button, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native';
+import { AppRegistry, AsyncStorage, Button, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native';
 
 class mypace extends Component {
   constructor(props) {
@@ -7,7 +9,9 @@ class mypace extends Component {
 
     this.state = {
       // States
-      isButtonEnabled: false,
+      isCalcButtonEnabled: false,
+      isSaveButtonEnabled: false,
+      isSplitsButtonEnabled: false,
 
       // Settings
       kmVsMi: 'km',
@@ -21,6 +25,9 @@ class mypace extends Component {
       paceHours: null,
       paceMinutes: null,
       paceSeconds: null,
+
+      // Saved items
+      items: [],
     };
 
     this.unit = {
@@ -166,13 +173,15 @@ class mypace extends Component {
     this.refs[current + 1].focus();
   };
 
-  // Update calculate button status
+  // Update button statuses
 
   updateStatus = () => {
     let dist = this.getDist() > 0, time = this.getTime() > 0, pace = this.getPace() > 0;
 
     this.setState({
-      isButtonEnabled: (dist && time && !pace || dist && !time && pace || !dist && time && pace)
+      isCalcButtonEnabled: (dist && time && !pace || dist && !time && pace || !dist && time && pace),
+      isSaveButtonEnabled: false,
+      isSplitsButtonEnabled: false
     });    
   };
 
@@ -188,7 +197,29 @@ class mypace extends Component {
     }
 
     this.setState({
-      isButtonEnabled: false
+      isCalcButtonEnabled: false,
+      isSaveButtonEnabled: true,
+      isSplitsButtonEnabled: true
+    });
+  };
+
+  // Save calculation to your list
+
+  saveCalculation = () => {
+    let key = this.getDist() + '-' + this.getTime() + '-' + this.getPace(),
+        value = JSON.stringify({
+          dist: this.getDist(),
+          time: this.getTime(),
+          pace: this.getPace()
+        });
+
+    AsyncStorage.setItem(key, value);
+
+    console.log('key', key);
+    console.log('value', value);
+
+    this.setState({
+      'isSaveButtonEnabled': false
     });
   };
 
@@ -206,7 +237,7 @@ class mypace extends Component {
         </View>
 
         <View>
-          <Text style={styles.introduction}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</Text>
+          <Text style={styles.introduction}>Lorem ipsum dolor sit amet</Text>
         </View>
 
         <View>
@@ -333,13 +364,21 @@ class mypace extends Component {
           <Button
             title="Calculate"
             accessibilityLabel="Calculate description"
-            disabled={!this.state.isButtonEnabled}
+            disabled={!this.state.isCalcButtonEnabled}
             onPress={this.calculate}
+          />
+
+          <Button
+            title="Save"
+            accessibilityLabel="Save description"
+            disabled={!this.state.isSaveButtonEnabled}
+            onPress={this.saveCalculation}
           />
         </View>
 
         <View style={styles.debugContainer}>
-          <Text style={styles.debugText}>isButtonEnabled: {this.state.isButtonEnabled ? 'true' : 'false'}</Text>
+          <Text style={styles.debugText}>isCalcButtonEnabled: {this.state.isCalcButtonEnabled ? 'true' : 'false'}</Text>
+          <Text style={styles.debugText}>test123: {this.state.test123}</Text>
         </View>
       </View>
     );
