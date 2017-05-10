@@ -8,6 +8,9 @@ class mypace extends Component {
     super(props);
 
     this.state = {
+      // Messages
+      messages: [],
+
       // States
       isCalcButtonEnabled: false,
       isSaveButtonEnabled: false,
@@ -26,7 +29,7 @@ class mypace extends Component {
       paceSeconds: null,
 
       // Saved items
-      items: [],
+      savedItems: [],
     };
 
     this.unit = {
@@ -36,6 +39,31 @@ class mypace extends Component {
       minute: 60, // seconds per minute
       second: 1, // seconds per second
     };
+  };
+
+  componentDidMount() {
+    this.loadInitialState().done();
+  };
+
+  loadInitialState = async () => {
+    try {
+      let savedItems = await AsyncStorage.getItem('savedItems');
+
+      if (savedItems !== null) {
+        this.setState({
+          savedItems: savedItems
+        });
+        this.appendMessage('Stored items: ' + savedItems);
+      } else {
+        this.appendMessage('Initialized with no selection on disk.');
+      }
+    } catch (error) {
+      this.appendMessage('AsyncStorage error: ' + error.message);
+    }
+  };
+
+  appendMessage = (message) => {
+    this.setState({messages: this.state.messages.concat(message)});
   };
 
 
@@ -203,19 +231,19 @@ class mypace extends Component {
   // Save calculation to your list
 
   saveCalculation = () => {
-    let key = this.getDist() + '-' + this.getTime() + '-' + this.getPace(),
-        value = JSON.stringify({
-          dist: this.getDist(),
-          time: this.getTime(),
-          pace: this.getPace()
-        });
+    let items = this.state.savedItems,
+        item = {};
 
-    AsyncStorage.setItem(key, value);
+    item['dist'] = this.state.distance * 1;
+    item['time'] = this.getTime();
+    item['pace'] = this.getPace();
 
-    console.log('key', key);
-    console.log('value', value);
+    items.push(item);
+
+    AsyncStorage.setItem('savedItems', JSON.stringify(items));
 
     this.setState({
+      'savedItems': items,
       'isSaveButtonEnabled': false
     });
   };
@@ -234,7 +262,7 @@ class mypace extends Component {
         </View>
 
         <View>
-          <Text style={styles.introduction}>Lorem ipsum dolor sit amet</Text>
+          {this.state.messages.map((m) => <Text key={m} style={styles.introduction}>{m}</Text>)}
         </View>
 
         <View>
@@ -375,7 +403,6 @@ class mypace extends Component {
 
         <View style={styles.debugContainer}>
           <Text style={styles.debugText}>isCalcButtonEnabled: {this.state.isCalcButtonEnabled ? 'true' : 'false'}</Text>
-          <Text style={styles.debugText}>test123: {this.state.test123}</Text>
         </View>
       </View>
     );
