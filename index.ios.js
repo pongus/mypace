@@ -8,16 +8,21 @@ class mypace extends Component {
     super(props);
 
     this.state = {
+      // Configurations
+      kmVsMi: 'km',
+      paceVsSpeed: 'pace',
+
+      // Views
+      isMainView: true,
+      isSavedView: false,
+      isConfigView: false,
+
       // Messages
       messages: [],
 
-      // States
+      // Buttons
       isCalcButtonEnabled: false,
       isSaveButtonEnabled: false,
-
-      // Settings
-      kmVsMi: 'km',
-      paceVsSpeed: 'pace',
 
       // Inputs
       distance: null,
@@ -53,7 +58,7 @@ class mypace extends Component {
         this.setState({
           savedItems: JSON.parse(savedItems)
         });
-        this.appendMessage('Stored items: ' + savedItems);
+        this.appendMessage(savedItems);
       } else {
         this.appendMessage('Initialized with no selection on disk.');
       }
@@ -247,8 +252,32 @@ class mypace extends Component {
     AsyncStorage.setItem('savedItems', JSON.stringify(items));
 
     this.setState({
-      'savedItems': items,
-      'isSaveButtonEnabled': false
+      savedItems: items,
+      isSaveButtonEnabled: false
+    });
+  };
+
+  showMainView = () => {
+    this.setState({
+      isMainView: true,
+      isSavedView: false,
+      isConfigView: false
+    });
+  };
+
+  showSavedView = () => {
+    this.setState({
+      isMainView: false,
+      isSavedView: true,
+      isConfigView: false
+    });
+  };
+
+  showConfigView = () => {
+    this.setState({
+      isMainView: false,
+      isSavedView: false,
+      isConfigView: true
     });
   };
 
@@ -261,12 +290,24 @@ class mypace extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View>
+        <View style={styles.header}>
+          <TouchableWithoutFeedback onPress={this.showSavedView}>
+            <View>
+              <Text>Saved</Text>
+            </View>
+          </TouchableWithoutFeedback>
+
           <Text style={styles.heading}>Title</Text>
+
+          <TouchableWithoutFeedback onPress={this.showConfigView}>
+            <View>
+              <Text>Config</Text>
+            </View>
+          </TouchableWithoutFeedback>
         </View>
 
         <View>
-          {this.state.messages.map((m) => <Text key={m} style={styles.introduction}>{m}</Text>)}
+          <Text style={styles.introduction}>Lorem ipsum dolor set amit...</Text>
         </View>
 
         <View>
@@ -279,7 +320,7 @@ class mypace extends Component {
               placeholder="METERS"
               keyboardType="numeric"
               value={this.state.distance}
-              maxLength={6}
+              maxLength={8}
               onChangeText={(distance) => this.setState({distance})}
               onEndEditing={this.updateStatus}
               onSubmitEditing={() => this.focusNextField(1)}
@@ -406,7 +447,7 @@ class mypace extends Component {
         </View>
 
         <View style={styles.debugContainer}>
-          <Text style={styles.debugText}>isCalcButtonEnabled: {this.state.isCalcButtonEnabled ? 'true' : 'false'}</Text>
+          {this.state.messages.map((msg) => <Text key={msg} ellipsizeMode="tail" numberOfLines={3} style={styles.debugText}>{msg}</Text>)}
         </View>
       </View>
     );
@@ -424,12 +465,14 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
-  inputContainer: {
-    flexDirection: 'row'
-  },
-  heading: {
+  header: {
+    // flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginTop: 20,
     marginBottom: 20,
+  },
+  heading: {
     fontSize: 24,
     textAlign: 'center',
   },
@@ -438,6 +481,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 16,
     textAlign: 'center',
+  },
+  inputContainer: {
+    flexDirection: 'row'
   },
   label: {
     marginTop: 20,
