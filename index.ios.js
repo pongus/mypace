@@ -1,7 +1,21 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { AppRegistry, AsyncStorage, Button, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native';
+
+import {
+  AppRegistry,
+  AsyncStorage,
+  Button,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableWithoutFeedback,
+  View
+} from 'react-native';
+
+import Swiper from 'react-native-swiper';
+
+
 
 class mypace extends Component {
   constructor(props) {
@@ -287,167 +301,181 @@ class mypace extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableWithoutFeedback onPress={this.showSavedView}>
-            <View>
-              <Text>Saved</Text>
-            </View>
-          </TouchableWithoutFeedback>
-
-          <Text style={styles.heading}>Title</Text>
-
-          <TouchableWithoutFeedback onPress={this.showConfigView}>
-            <View>
-              <Text>Config</Text>
-            </View>
-          </TouchableWithoutFeedback>
+      <Swiper loop={false} index={1} showsPagination={false}>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.heading}>Saved</Text>
+          </View>
         </View>
 
-        <View>
-          <Text style={styles.introduction}>Lorem ipsum dolor set amit...</Text>
-        </View>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <TouchableWithoutFeedback onPress={this.showSavedView}>
+              <View>
+                <Text>Saved</Text>
+              </View>
+            </TouchableWithoutFeedback>
 
-        <View>
-          <Text style={styles.label}>{"Distance".toUpperCase()}</Text>
-          
-          <View style={styles.inputContainer}>
-            <TextInput
-              ref="1"
-              autoFocus={true}
-              placeholder="METERS"
-              keyboardType="numeric"
-              value={this.state.distance}
-              maxLength={8}
-              onChangeText={(distance) => this.setState({distance})}
-              onEndEditing={this.updateButtonStatus}
-              onSubmitEditing={() => this.focusNextField(1)}
-              style={styles.input}
+            <Text style={styles.heading}>Calculate</Text>
+
+            <TouchableWithoutFeedback onPress={this.showConfigView}>
+              <View>
+                <Text>Config</Text>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+
+          <View>
+            <Text style={styles.introduction}>Lorem ipsum dolor set amit...</Text>
+          </View>
+
+          <View>
+            <Text style={styles.label}>{"Distance".toUpperCase()}</Text>
+
+            <View style={styles.inputContainer}>
+              <TextInput
+                ref="1"
+                autoFocus={true}
+                placeholder="METERS"
+                keyboardType="numeric"
+                value={this.state.distance}
+                maxLength={8}
+                onChangeText={(distance) => this.setState({distance})}
+                onEndEditing={this.updateButtonStatus}
+                onSubmitEditing={() => this.focusNextField(1)}
+                style={styles.input}
+              />
+            </View>
+
+            <TouchableWithoutFeedback onPress={this.clearDist}>
+              <View>
+                <Text>Clear</Text>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+
+          <View>
+            <Text style={styles.label}>{"Time".toUpperCase()}</Text>
+
+            <View style={styles.inputContainer}>
+              <TextInput
+                ref="2"
+                placeholder="HH"
+                keyboardType="number-pad"
+                value={this.state.timeHours}
+                maxLength={2}
+                onChangeText={(timeHours) => this.setState({timeHours})}
+                onEndEditing={this.updateButtonStatus}
+                onSubmitEditing={() => this.focusNextField(2)}
+                style={styles.input}
+              />
+
+              <TextInput
+                ref="3"
+                placeholder="MM"
+                keyboardType="number-pad"
+                value={this.state.timeMinutes}
+                maxLength={2}
+                onChangeText={(timeMinutes) => this.setState({timeMinutes})}
+                onEndEditing={this.updateButtonStatus}
+                onSubmitEditing={() => this.focusNextField(3)}
+                style={styles.input}
+              />
+
+              <TextInput
+                ref="4"
+                placeholder="SS"
+                keyboardType="number-pad"
+                value={this.state.timeSeconds}
+                maxLength={2}
+                onChangeText={(timeSeconds) => this.setState({timeSeconds})}
+                onEndEditing={this.updateButtonStatus}
+                onSubmitEditing={() => this.focusNextField(4)}
+                style={styles.input}
+              />
+            </View>
+
+            <TouchableWithoutFeedback onPress={this.clearTime}>
+              <View>
+                <Text>Clear</Text>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+
+          <View>
+            <Text style={styles.label}>{'Pace'.toUpperCase()}</Text>
+
+            <View style={styles.inputContainer}>
+              <TextInput
+                ref="5"
+                placeholder="HH"
+                keyboardType="number-pad"
+                value={this.state.paceHours}
+                maxLength={2}
+                onChangeText={(paceHours) => this.setState({paceHours})}
+                onEndEditing={this.updateButtonStatus}
+                onSubmitEditing={() => this.focusNextField(5)}
+                style={styles.input}
+              />
+
+              <TextInput
+                ref="6"
+                placeholder="MM"
+                keyboardType="number-pad"
+                value={this.state.paceMinutes}
+                maxLength={2}
+                onChangeText={(paceMinutes) => this.setState({paceMinutes})}
+                onEndEditing={this.updateButtonStatus}
+                onSubmitEditing={() => this.focusNextField(6)}
+                style={styles.input}
+              />
+
+              <TextInput
+                ref="7"
+                placeholder="SS"
+                keyboardType="number-pad"
+                value={this.state.paceSeconds}
+                maxLength={2}
+                onChangeText={(paceSeconds) => this.setState({paceSeconds})}
+                onEndEditing={this.updateButtonStatus}
+                style={styles.input}
+              />
+            </View>
+
+            <TouchableWithoutFeedback onPress={this.clearPace}>
+              <View>
+                <Text>Clear</Text>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+
+          <View style={styles.actionContainer}>
+            <Button
+              title="Calculate"
+              accessibilityLabel="Calculate description here..."
+              disabled={!this.state.isCalcButtonEnabled}
+              onPress={this.calculate}
+            />
+
+            <Button
+              title="Save"
+              accessibilityLabel="Save description here..."
+              disabled={!this.state.isSaveButtonEnabled}
+              onPress={this.saveCalculation}
             />
           </View>
 
-          <TouchableWithoutFeedback onPress={this.clearDist}>
-            <View>
-              <Text>Clear</Text>
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
-
-        <View>
-          <Text style={styles.label}>{"Time".toUpperCase()}</Text>
-
-          <View style={styles.inputContainer}>
-            <TextInput 
-              ref="2"
-              placeholder="HH"
-              keyboardType="number-pad"
-              value={this.state.timeHours}
-              maxLength={2}
-              onChangeText={(timeHours) => this.setState({timeHours})}
-              onEndEditing={this.updateButtonStatus}
-              onSubmitEditing={() => this.focusNextField(2)}
-              style={styles.input}
-            />
-
-            <TextInput 
-              ref="3"
-              placeholder="MM"
-              keyboardType="number-pad"
-              value={this.state.timeMinutes}
-              maxLength={2}
-              onChangeText={(timeMinutes) => this.setState({timeMinutes})}
-              onEndEditing={this.updateButtonStatus}
-              onSubmitEditing={() => this.focusNextField(3)}
-              style={styles.input}
-            />
-
-            <TextInput 
-              ref="4"
-              placeholder="SS" 
-              keyboardType="number-pad"
-              value={this.state.timeSeconds}
-              maxLength={2}
-              onChangeText={(timeSeconds) => this.setState({timeSeconds})}
-              onEndEditing={this.updateButtonStatus}
-              onSubmitEditing={() => this.focusNextField(4)}
-              style={styles.input}
-            />
+          <View style={styles.debugContainer}>
+            {this.state.messages.map((msg) => <Text key={msg} ellipsizeMode="tail" numberOfLines={3} style={styles.debugText}>{msg}</Text>)}
           </View>
-
-          <TouchableWithoutFeedback onPress={this.clearTime}>
-            <View>
-              <Text>Clear</Text>
-            </View>
-          </TouchableWithoutFeedback>
         </View>
 
-        <View>
-          <Text style={styles.label}>{'Pace'.toUpperCase()}</Text>
-
-          <View style={styles.inputContainer}>
-            <TextInput 
-              ref="5"
-              placeholder="HH"
-              keyboardType="number-pad"
-              value={this.state.paceHours}
-              maxLength={2}
-              onChangeText={(paceHours) => this.setState({paceHours})}
-              onEndEditing={this.updateButtonStatus}
-              onSubmitEditing={() => this.focusNextField(5)}
-              style={styles.input}
-            />
-
-            <TextInput 
-              ref="6"
-              placeholder="MM" 
-              keyboardType="number-pad"
-              value={this.state.paceMinutes}
-              maxLength={2}
-              onChangeText={(paceMinutes) => this.setState({paceMinutes})}
-              onEndEditing={this.updateButtonStatus}
-              onSubmitEditing={() => this.focusNextField(6)}
-              style={styles.input}
-            />
-
-            <TextInput 
-              ref="7"
-              placeholder="SS"
-              keyboardType="number-pad"
-              value={this.state.paceSeconds}
-              maxLength={2}
-              onChangeText={(paceSeconds) => this.setState({paceSeconds})}
-              onEndEditing={this.updateButtonStatus}
-              style={styles.input}
-            />
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.heading}>Config</Text>
           </View>
-
-          <TouchableWithoutFeedback onPress={this.clearPace}>
-            <View>
-              <Text>Clear</Text>
-            </View>
-          </TouchableWithoutFeedback>
         </View>
-
-        <View style={styles.actionContainer}>
-          <Button
-            title="Calculate"
-            accessibilityLabel="Calculate description here..."
-            disabled={!this.state.isCalcButtonEnabled}
-            onPress={this.calculate}
-          />
-
-          <Button
-            title="Save"
-            accessibilityLabel="Save description here..."
-            disabled={!this.state.isSaveButtonEnabled}
-            onPress={this.saveCalculation}
-          />
-        </View>
-
-        <View style={styles.debugContainer}>
-          {this.state.messages.map((msg) => <Text key={msg} ellipsizeMode="tail" numberOfLines={3} style={styles.debugText}>{msg}</Text>)}
-        </View>
-      </View>
+      </Swiper>
     );
   }
 }
@@ -470,6 +498,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   heading: {
+    flex: 1,
     fontSize: 24,
     textAlign: 'center',
   },
@@ -495,7 +524,6 @@ const styles = StyleSheet.create({
   },
   description: {
     marginTop: 5,
-    textAlign: 'center'
   },
   actionContainer: {
     marginTop: 20,
