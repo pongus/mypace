@@ -51,7 +51,7 @@ class mypace extends Component {
 
       if (savedItems !== null) {
         this.setState({
-          savedItems: savedItems
+          savedItems: JSON.parse(savedItems)
         });
         this.appendMessage('Stored items: ' + savedItems);
       } else {
@@ -63,7 +63,9 @@ class mypace extends Component {
   };
 
   appendMessage = (message) => {
-    this.setState({messages: this.state.messages.concat(message)});
+    this.setState({
+      messages: this.state.messages.concat(message)
+    });
   };
 
 
@@ -203,7 +205,9 @@ class mypace extends Component {
   // Update button statuses
 
   updateStatus = () => {
-    let dist = this.getDist() > 0, time = this.getTime() > 0, pace = this.getPace() > 0;
+    let dist = this.getDist() > 0,
+        time = this.getTime() > 0,
+        pace = this.getPace() > 0;
 
     this.setState({
       isCalcButtonEnabled: (dist && time && !pace || dist && !time && pace || !dist && time && pace),
