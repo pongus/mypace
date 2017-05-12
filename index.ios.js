@@ -27,9 +27,7 @@ class mypace extends Component {
       paceVsSpeed: 'pace',
 
       // Views
-      isMainView: true,
-      isSavedView: false,
-      isConfigView: false,
+      currentView: 1,
 
       // Messages
       messages: [],
@@ -269,27 +267,9 @@ class mypace extends Component {
     });
   };
 
-  showMainView = () => {
+  setCurrentView = (event, state, context) => {
     this.setState({
-      isMainView: true,
-      isSavedView: false,
-      isConfigView: false
-    });
-  };
-
-  showSavedView = () => {
-    this.setState({
-      isMainView: false,
-      isSavedView: true,
-      isConfigView: false
-    });
-  };
-
-  showConfigView = () => {
-    this.setState({
-      isMainView: false,
-      isSavedView: false,
-      isConfigView: true
+      currentView: context.state.index
     });
   };
 
@@ -301,7 +281,7 @@ class mypace extends Component {
 
   render() {
     return (
-      <Swiper loop={false} index={1} showsPagination={false}>
+      <Swiper loop={false} index={this.state.currentView} showsPagination={false} onMomentumScrollEnd={this.setCurrentView}>
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.heading}>Saved</Text>
