@@ -59,8 +59,6 @@ class mypace extends Component {
           savedItems: JSON.parse(savedItems)
         });
         this.appendMessage(savedItems);
-      } else {
-        this.appendMessage('Initialized with no selection on disk.');
       }
     } catch (error) {
       this.appendMessage('AsyncStorage error: ' + error.message);
@@ -100,7 +98,7 @@ class mypace extends Component {
   clearDist = () => {
     this.setState({
       distance: null
-    }, () => this.updateStatus());
+    }, () => this.updateButtonStatus());
   };
 
 
@@ -134,7 +132,7 @@ class mypace extends Component {
       timeHours: null,
       timeMinutes: null,
       timeSeconds: null
-    }, () => this.updateStatus());
+    }, () => this.updateButtonStatus());
   };
 
 
@@ -168,7 +166,7 @@ class mypace extends Component {
       paceHours: null,
       paceMinutes: null,
       paceSeconds: null
-    }, () => this.updateStatus());
+    }, () => this.updateButtonStatus());
   };
 
 
@@ -209,7 +207,7 @@ class mypace extends Component {
 
   // Update button statuses
 
-  updateStatus = () => {
+  updateButtonStatus = () => {
     let dist = this.getDist() > 0,
         time = this.getTime() > 0,
         pace = this.getPace() > 0;
@@ -322,7 +320,7 @@ class mypace extends Component {
               value={this.state.distance}
               maxLength={8}
               onChangeText={(distance) => this.setState({distance})}
-              onEndEditing={this.updateStatus}
+              onEndEditing={this.updateButtonStatus}
               onSubmitEditing={() => this.focusNextField(1)}
               style={styles.input}
             />
@@ -346,7 +344,7 @@ class mypace extends Component {
               value={this.state.timeHours}
               maxLength={2}
               onChangeText={(timeHours) => this.setState({timeHours})}
-              onEndEditing={this.updateStatus}
+              onEndEditing={this.updateButtonStatus}
               onSubmitEditing={() => this.focusNextField(2)}
               style={styles.input}
             />
@@ -358,7 +356,7 @@ class mypace extends Component {
               value={this.state.timeMinutes}
               maxLength={2}
               onChangeText={(timeMinutes) => this.setState({timeMinutes})}
-              onEndEditing={this.updateStatus}
+              onEndEditing={this.updateButtonStatus}
               onSubmitEditing={() => this.focusNextField(3)}
               style={styles.input}
             />
@@ -370,7 +368,7 @@ class mypace extends Component {
               value={this.state.timeSeconds}
               maxLength={2}
               onChangeText={(timeSeconds) => this.setState({timeSeconds})}
-              onEndEditing={this.updateStatus}
+              onEndEditing={this.updateButtonStatus}
               onSubmitEditing={() => this.focusNextField(4)}
               style={styles.input}
             />
@@ -394,7 +392,7 @@ class mypace extends Component {
               value={this.state.paceHours}
               maxLength={2}
               onChangeText={(paceHours) => this.setState({paceHours})}
-              onEndEditing={this.updateStatus}
+              onEndEditing={this.updateButtonStatus}
               onSubmitEditing={() => this.focusNextField(5)}
               style={styles.input}
             />
@@ -406,7 +404,7 @@ class mypace extends Component {
               value={this.state.paceMinutes}
               maxLength={2}
               onChangeText={(paceMinutes) => this.setState({paceMinutes})}
-              onEndEditing={this.updateStatus}
+              onEndEditing={this.updateButtonStatus}
               onSubmitEditing={() => this.focusNextField(6)}
               style={styles.input}
             />
@@ -418,7 +416,7 @@ class mypace extends Component {
               value={this.state.paceSeconds}
               maxLength={2}
               onChangeText={(paceSeconds) => this.setState({paceSeconds})}
-              onEndEditing={this.updateStatus}
+              onEndEditing={this.updateButtonStatus}
               style={styles.input}
             />
           </View>
@@ -433,14 +431,14 @@ class mypace extends Component {
         <View style={styles.actionContainer}>
           <Button
             title="Calculate"
-            accessibilityLabel="Calculate description"
+            accessibilityLabel="Calculate description here..."
             disabled={!this.state.isCalcButtonEnabled}
             onPress={this.calculate}
           />
 
           <Button
             title="Save"
-            accessibilityLabel="Save description"
+            accessibilityLabel="Save description here..."
             disabled={!this.state.isSaveButtonEnabled}
             onPress={this.saveCalculation}
           />
@@ -466,7 +464,6 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   header: {
-    // flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 20,
