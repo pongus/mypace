@@ -6,6 +6,7 @@ import {
   AppRegistry,
   AsyncStorage,
   Button,
+  FlatList,
   StyleSheet,
   Text,
   TextInput,
@@ -273,6 +274,12 @@ class mypace extends Component {
     });
   };
 
+  getSavedItemsSorted = () => {
+    let savedItems = this.state.savedItems;
+
+    return savedItems;
+  };
+
 
 
   //
@@ -285,6 +292,20 @@ class mypace extends Component {
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.heading}>Saved</Text>
+          </View>
+
+          <View>
+            <FlatList
+              style={styles.listContainer}
+              data={this.getSavedItemsSorted()}
+              renderItem={({item}) => (
+                <View style={styles.listItem}>
+                  <Text style={styles.listData}>{item.dist}</Text>
+                  <Text style={styles.listData}>{item.time}</Text>
+                  <Text style={styles.listData}>{item.pace}</Text>
+                </View>
+              )}
+            />
           </View>
         </View>
 
@@ -507,6 +528,17 @@ const styles = StyleSheet.create({
   },
   actionContainer: {
     marginTop: 20,
+  },
+  listContainer: {
+  },
+  listItem: {
+    flexDirection: 'row',
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  listData: {
+    flex: 1,
+    fontSize: 16,
   },
   debugContainer: {
     position: 'absolute',
