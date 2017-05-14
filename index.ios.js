@@ -358,10 +358,10 @@ class mypace extends Component {
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.heading}>Saved</Text>
-            <Text onPress={() => this.swiper.scrollBy(1)}>Calculate</Text>
+            <Text style={styles.navigation} onPress={() => this.swiper.scrollBy(1)}>Calculate</Text>
           </View>
 
-          <View>
+          <View style={styles.body}>
             <FlatList
               style={styles.listContainer}
               data={this.getSavedItemsSorted()}
@@ -379,16 +379,14 @@ class mypace extends Component {
 
         <View style={styles.container}>
           <View style={styles.header}>
-            <Text onPress={() => this.swiper.scrollBy(-1)}>Saved</Text>
+            <Text style={styles.navigation} onPress={() => this.swiper.scrollBy(-1)}>Saved</Text>
             <Text style={styles.heading}>Calculate</Text>
-            <Text onPress={() => this.swiper.scrollBy(1)}>Config</Text>
+            <Text style={styles.navigation} onPress={() => this.swiper.scrollBy(1)}>Config</Text>
           </View>
 
-          <View>
+          <View style={styles.body}>
             <Text style={styles.introduction}>Lorem ipsum dolor set amit...</Text>
-          </View>
 
-          <View>
             <Text style={styles.label}>{"Distance".toUpperCase()}</Text>
 
             <View style={styles.inputContainer}>
@@ -411,9 +409,7 @@ class mypace extends Component {
                 <Text>Clear</Text>
               </View>
             </TouchableWithoutFeedback>
-          </View>
 
-          <View>
             <Text style={styles.label}>{"Time".toUpperCase()}</Text>
 
             <View style={styles.inputContainer}>
@@ -459,9 +455,7 @@ class mypace extends Component {
                 <Text>Clear</Text>
               </View>
             </TouchableWithoutFeedback>
-          </View>
 
-          <View>
             <Text style={styles.label}>{'Pace'.toUpperCase()}</Text>
 
             <View style={styles.inputContainer}>
@@ -506,34 +500,36 @@ class mypace extends Component {
                 <Text>Clear</Text>
               </View>
             </TouchableWithoutFeedback>
-          </View>
 
-          <View style={styles.actionContainer}>
-            <Button
-              title="Calculate"
-              accessibilityLabel="Calculate description here..."
-              disabled={!this.state.isCalcButtonEnabled}
-              onPress={this.calculate}
-            />
+            <View style={styles.actionContainer}>
+              <Button
+                title="Calculate"
+                accessibilityLabel="Calculate description here..."
+                disabled={!this.state.isCalcButtonEnabled}
+                onPress={this.calculate}
+              />
 
-            <Button
-              title="Save"
-              accessibilityLabel="Save description here..."
-              disabled={!this.state.isSaveButtonEnabled}
-              onPress={this.saveCalculation}
-            />
-          </View>
+              <Button
+                title="Save"
+                accessibilityLabel="Save description here..."
+                disabled={!this.state.isSaveButtonEnabled}
+                onPress={this.saveCalculation}
+              />
+            </View>
 
-          <View style={styles.debugContainer}>
-            {this.state.messages.map((msg) => <Text key={msg} ellipsizeMode="tail" numberOfLines={3} style={styles.debugText}>{msg}</Text>)}
+            <View style={styles.debugContainer}>
+              {/* this.state.messages.map((msg) => <Text key={msg} ellipsizeMode="tail" numberOfLines={3} style={styles.debugText}>{msg}</Text>) */}
+            </View>
           </View>
         </View>
 
         <View style={styles.container}>
           <View style={styles.header}>
-            <Text onPress={() => this.swiper.scrollBy(-1)}>Calculate</Text>
+            <Text style={styles.navigation} onPress={() => this.swiper.scrollBy(-1)}>Calculate</Text>
             <Text style={styles.heading}>Config</Text>
           </View>
+
+          <View style={styles.body} />
         </View>
       </Swiper>
     );
@@ -549,22 +545,34 @@ class mypace extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    backgroundColor: '#F7F7F7'
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20,
-    marginBottom: 20,
+    paddingTop: 30,
+    paddingBottom: 15,
+    backgroundColor: '#333',
+  },
+  navigation: {
+    marginTop: 4,
+    paddingRight: 20,
+    paddingLeft: 20,
+    color: '#FFF',
   },
   heading: {
     flex: 1,
-    fontSize: 24,
+    color: '#FFF',
+    fontSize: 20,
     textAlign: 'center',
+  },
+  body: {
+    padding: 20,
   },
   introduction: {
     marginTop: 10,
     marginBottom: 10,
+    color: '#333',
     fontSize: 16,
     textAlign: 'center',
   },
@@ -574,11 +582,12 @@ const styles = StyleSheet.create({
   label: {
     marginTop: 20,
     marginBottom: 5,
+    color: '#333',
   },
   input: {
     flex: 1,
     height: 50,
-    backgroundColor: '#F7F7F7',
+    backgroundColor: '#FFF',
     fontSize: 16,
     textAlign: 'center',
   },
@@ -605,15 +614,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   debugContainer: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 20,
-    margin: 20,
-    padding: 15,
+    marginTop: 20,
     backgroundColor: 'red',
   },
   debugText: {
+    padding: 15,
     color: '#FFF',
     fontFamily: 'Courier',
     lineHeight: 18,
