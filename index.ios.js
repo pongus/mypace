@@ -24,7 +24,21 @@ import Swiper from 'react-native-swiper';
 // * Replace text with icons
 // * Basic calculate button styling
 // * Basic header styling
-// * Add distance quick list filled with common distances
+// * Add a distance quick list:
+//  * Road Events:
+//    * 5 km
+//    * 10 km
+//    * Half-Marathon
+//    * Marathon
+//  * Track events:
+//    * 100 m
+//    * 200 m
+//    * 400 m
+//    * 800 m
+//    * 1 000 m
+//    * 1 500 m
+//    * 5 000 m
+//    * 10 000 m
 // * Validation if higher than 60 minutes and/or 60 seconds
 // * Kilometer vs mile setting
 // * Get splits
@@ -78,6 +92,8 @@ class mypace extends Component {
     this.loadInitialState().done();
   };
 
+  // Load stored items if any
+
   loadInitialState = async () => {
     try {
       let savedItems = await AsyncStorage.getItem('savedItems');
@@ -93,10 +109,115 @@ class mypace extends Component {
     }
   };
 
+  // Messages
+
   appendMessage = (message) => {
     this.setState({
       messages: this.state.messages.concat(message)
     });
+  };
+
+  // Update current view index when using navigation or swiping
+
+  setCurrentView = (event, state, context) => {
+    this.setState({
+      currentView: context.state.index
+    });
+  };
+
+  // Focus next input field
+
+  focusNextField = (current) => {
+    this.refs[current + 1].focus();
+  };
+
+  // Update button statuses
+
+  updateButtonStatus = () => {
+    let dist = this.getDist() > 0,
+        time = this.getTime() > 0,
+        pace = this.getPace() > 0;
+
+    this.setState({
+      isCalcButtonEnabled: (dist && time && !pace || dist && !time && pace || !dist && time && pace),
+      isSaveButtonEnabled: false
+    });    
+  };
+
+  // Calculate distance, time or pace
+
+  calculate = () => {
+    if (this.getDist() && this.getTime()) {
+      this.setPace();
+    } else if (this.getDist() && this.getPace()) {
+      this.setTime();
+    } else if (this.getTime() && this.getPace()) {
+      this.setDist();
+    }
+
+    this.setState({
+      isCalcButtonEnabled: false,
+      isSaveButtonEnabled: true
+    });
+  };
+
+  // Save calculation to your list
+
+  saveCalculation = () => {
+    let items = this.state.savedItems,
+        item = {};
+
+    item['dist'] = this.state.distance * 1;
+    item['time'] = this.getTime();
+    item['pace'] = this.getPace();
+
+    items.push(item);
+
+    AsyncStorage.setItem('savedItems', JSON.stringify(items));
+
+    this.setState({
+      savedItems: items,
+      isSaveButtonEnabled: false
+    });
+  };
+
+  // Sort stored items
+
+  getSavedItemsSorted = () => {
+    return this.state.savedItems.sort((a, b) => a.dist - b.dist ? a.dist - b.dist : a.time - b.time);
+  };
+
+
+
+  //
+  // Time conversions
+  //
+
+  // Get hours output (from seconds)
+
+  getHours = (s) => {
+    let hours = Math.floor(s / this.unit.hour);
+    return hours ? this.zeroPrefix(hours).toString() : '00';
+  };
+
+  // Get minutes output (from seconds)
+
+  getMinutes = (s) => {
+    let minutes = Math.floor((s % this.unit.hour) / this.unit.minute);
+    return minutes ? this.zeroPrefix(minutes).toString() : '00';
+  };
+
+  // Get seconds output (from seconds)
+
+  getSeconds = (s) => {
+    let seconds = s % this.unit.minute;
+    return seconds ? this.zeroPrefix(seconds.toFixed(0)).toString() : '00';
+  };
+
+  // Add leading zero if needed
+
+  zeroPrefix = (number) => {
+    return number < 10 ? '0' + number : number;
   };
 
 
@@ -218,107 +339,8 @@ class mypace extends Component {
 
 
   //
-  // Time conversions
+  // Render
   //
-
-  // Get hours output (from seconds)
-
-  getHours = (s) => {
-    let hours = Math.floor(s / this.unit.hour);
-    return hours ? this.zeroPrefix(hours).toString() : '00';
-  };
-
-  // Get minutes output (from seconds)
-
-  getMinutes = (s) => {
-    let minutes = Math.floor((s % this.unit.hour) / this.unit.minute);
-    return minutes ? this.zeroPrefix(minutes).toString() : '00';
-  };
-
-  // Get seconds output (from seconds)
-
-  getSeconds = (s) => {
-    let seconds = s % this.unit.minute;
-    return seconds ? this.zeroPrefix(seconds.toFixed(0)).toString() : '00';
-  };
-
-  // Add leading zero if needed
-
-  zeroPrefix = (number) => {
-    return number < 10 ? '0' + number : number;
-  };
-
-
-
-  //
-  // User actions
-  //
-
-  // Focus next input field
-
-  focusNextField = (current) => {
-    this.refs[current + 1].focus();
-  };
-
-  // Update button statuses
-
-  updateButtonStatus = () => {
-    let dist = this.getDist() > 0,
-        time = this.getTime() > 0,
-        pace = this.getPace() > 0;
-
-    this.setState({
-      isCalcButtonEnabled: (dist && time && !pace || dist && !time && pace || !dist && time && pace),
-      isSaveButtonEnabled: false
-    });    
-  };
-
-  // Calculate distance, time or pace
-
-  calculate = () => {
-    if (this.getDist() && this.getTime()) {
-      this.setPace();
-    } else if (this.getDist() && this.getPace()) {
-      this.setTime();
-    } else if (this.getTime() && this.getPace()) {
-      this.setDist();
-    }
-
-    this.setState({
-      isCalcButtonEnabled: false,
-      isSaveButtonEnabled: true
-    });
-  };
-
-  // Save calculation to your list
-
-  saveCalculation = () => {
-    let items = this.state.savedItems,
-        item = {};
-
-    item['dist'] = this.state.distance * 1;
-    item['time'] = this.getTime();
-    item['pace'] = this.getPace();
-
-    items.push(item);
-
-    AsyncStorage.setItem('savedItems', JSON.stringify(items));
-
-    this.setState({
-      savedItems: items,
-      isSaveButtonEnabled: false
-    });
-  };
-
-  setCurrentView = (event, state, context) => {
-    this.setState({
-      currentView: context.state.index
-    });
-  };
-
-  getSavedItemsSorted = () => {
-    return this.state.savedItems.sort((a, b) => a.dist - b.dist ? a.dist - b.dist : a.time - b.time);
-  };
 
   renderListHeader = () => {
     return (
@@ -329,12 +351,6 @@ class mypace extends Component {
       </View>
     );
   };
-
-
-
-  //
-  // Render
-  //
 
   render() {
     return (
