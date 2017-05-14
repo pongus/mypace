@@ -20,7 +20,6 @@ import Swiper from 'react-native-swiper';
 
 // 
 // TODO:
-// * Remove saved items
 // * Replace text with icons
 // * Basic calculate button styling
 // * Basic header styling
