@@ -20,7 +20,6 @@ import Swiper from 'react-native-swiper';
 
 // 
 // TODO:
-// * Go to different views using header links
 // * Remove saved items
 // * Replace text with icons
 // * Basic calculate button styling
@@ -30,6 +29,7 @@ import Swiper from 'react-native-swiper';
 // * Kilometer vs mile setting
 // * Get splits
 // * Get negative splits
+//
 
 
 
@@ -338,16 +338,11 @@ class mypace extends Component {
 
   render() {
     return (
-      <Swiper loop={false} index={this.state.currentView} showsPagination={false} onMomentumScrollEnd={this.setCurrentView}>
+      <Swiper ref={(swiper) => this.swiper = swiper} loop={false} index={this.state.currentView} showsPagination={false} onMomentumScrollEnd={this.setCurrentView}>
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.heading}>Saved</Text>
-
-            <TouchableWithoutFeedback onPress={this.showMainView}>
-              <View>
-                <Text>Calculate</Text>
-              </View>
-            </TouchableWithoutFeedback>
+            <Text onPress={() => this.swiper.scrollBy(1)}>Calculate</Text>
           </View>
 
           <View>
@@ -368,19 +363,9 @@ class mypace extends Component {
 
         <View style={styles.container}>
           <View style={styles.header}>
-            <TouchableWithoutFeedback onPress={this.showSavedView}>
-              <View>
-                <Text>Saved</Text>
-              </View>
-            </TouchableWithoutFeedback>
-
+            <Text onPress={() => this.swiper.scrollBy(-1)}>Saved</Text>
             <Text style={styles.heading}>Calculate</Text>
-
-            <TouchableWithoutFeedback onPress={this.showConfigView}>
-              <View>
-                <Text>Config</Text>
-              </View>
-            </TouchableWithoutFeedback>
+            <Text onPress={() => this.swiper.scrollBy(1)}>Config</Text>
           </View>
 
           <View>
@@ -530,12 +515,7 @@ class mypace extends Component {
 
         <View style={styles.container}>
           <View style={styles.header}>
-            <TouchableWithoutFeedback onPress={this.showMainView}>
-              <View>
-                <Text>Calculate</Text>
-              </View>
-            </TouchableWithoutFeedback>
-
+            <Text onPress={() => this.swiper.scrollBy(-1)}>Calculate</Text>
             <Text style={styles.heading}>Config</Text>
           </View>
         </View>
