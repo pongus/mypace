@@ -92,6 +92,10 @@ class mypace extends Component {
     this.loadInitialState().done();
   };
 
+  componentWillReceiveProps(nextProps) {
+
+  };
+
   // Load stored items if any
 
   loadInitialState = async () => {
@@ -161,7 +165,7 @@ class mypace extends Component {
     });
   };
 
-  // Save calculation to your list
+  // Save item
 
   saveCalculation = () => {
     let items = this.state.savedItems,
@@ -181,9 +185,21 @@ class mypace extends Component {
     });
   };
 
-  // Sort stored items
+  // Delete item
 
-  getSavedItemsSorted = () => {
+  deleteCalculation = (index) => {
+    let items = this.state.savedItems.filter((item, i) => i !== index);
+
+    AsyncStorage.setItem('savedItems', JSON.stringify(items));
+
+    this.setState({
+      savedItems: items
+    });
+  };
+
+  // Sort items
+
+  getSortedItems = () => {
     return this.state.savedItems.sort((a, b) => a.dist - b.dist ? a.dist - b.dist : a.time - b.time);
   };
 
@@ -348,6 +364,7 @@ class mypace extends Component {
         <Text style={styles.listHeader}>Distance</Text>
         <Text style={styles.listHeader}>Time</Text>
         <Text style={styles.listHeader}>Pace</Text>
+        <Text style={styles.listHeader}>Remove</Text>
       </View>
     );
   };
@@ -364,13 +381,14 @@ class mypace extends Component {
           <View style={styles.body}>
             <FlatList
               style={styles.listContainer}
-              data={this.getSavedItemsSorted()}
+              data={this.getSortedItems()}
               ListHeaderComponent={this.renderListHeader}
               renderItem={({item, index}) => (
                 <View style={styles.listItem}>
                   <Text style={styles.listData}>{this.getDistOutput(item.dist)}</Text>
                   <Text style={styles.listData}>{this.getTimeOutput(item.time)}</Text>
                   <Text style={styles.listData}>{this.getPaceOutput(item.pace)}</Text>
+                  <Text style={styles.listData} onPress={() => this.deleteCalculation(index)}>Delete</Text>
                 </View>
               )}
             />
