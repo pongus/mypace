@@ -18,6 +18,21 @@ import Swiper from 'react-native-swiper';
 
 
 
+// 
+// TODO:
+// * Go to different views using header links
+// * Remove saved items
+// * Replace text with icons
+// * Basic calculate button styling
+// * Basic header styling
+// * Add distance quick list filled with common distances
+// * Validation if higher than 60 minutes and/or 60 seconds
+// * Kilometer vs mile setting
+// * Get splits
+// * Get negative splits
+
+
+
 class mypace extends Component {
   constructor(props) {
     super(props);
@@ -90,12 +105,6 @@ class mypace extends Component {
   // Distance
   //
 
-  // Get distance (in kilometers or miles)
-
-  getDist = () => {
-    return this.state.kmVsMi === 'mi' ? this.state.distance / this.unit.mile : this.state.distance / this.unit.kilometer;
-  };
-
   // Set distance (distance = time / pace)
 
   setDist = () => {
@@ -104,6 +113,18 @@ class mypace extends Component {
     this.setState({
       distance: distance ? (this.state.kmVsMi === 'mi' ? distance * this.unit.mile : distance * this.unit.kilometer).toFixed(0).toString() : false
     });
+  };
+
+  // Get distance (in kilometers or miles)
+
+  getDist = () => {
+    return this.state.kmVsMi === 'mi' ? this.state.distance / this.unit.mile : this.state.distance / this.unit.kilometer;
+  };
+
+  // Get distance output (in meters)
+
+  getDistOutput = (dist) => {
+    return dist + ' m';
   };
 
   // Clear distance input field
@@ -120,12 +141,6 @@ class mypace extends Component {
   // Time
   //
 
-  // Get time (in seconds)
-
-  getTime = () => {
-    return this.state.timeHours * this.unit.hour + this.state.timeMinutes * this.unit.minute + this.state.timeSeconds * this.unit.second;
-  };
-
   // Set time (time = pace * distance)
 
   setTime = () => {
@@ -136,6 +151,18 @@ class mypace extends Component {
       timeMinutes: time ? this.getMinutes(time) : null,
       timeSeconds: time ? this.getSeconds(time) : null
     });
+  };
+
+  // Get time (in seconds)
+
+  getTime = () => {
+    return this.state.timeHours * this.unit.hour + this.state.timeMinutes * this.unit.minute + this.state.timeSeconds * this.unit.second;
+  };
+
+  // Get pace output (in hours, minutes and seconds)
+
+  getTimeOutput = (time) => {
+    return this.getHours(time) + ':' + this.getMinutes(time) + ':' + this.getSeconds(time);
   };
 
   // Clear time input fields
@@ -154,12 +181,6 @@ class mypace extends Component {
   // Pace
   //
 
-  // Get pace (in seconds)
-
-  getPace = () => {
-    return this.state.paceHours * this.unit.hour + this.state.paceMinutes * this.unit.minute + this.state.paceSeconds * this.unit.second;
-  };
-
   // Set pace (pace = time / distance)
 
   setPace = () => {
@@ -170,6 +191,18 @@ class mypace extends Component {
       paceMinutes: pace ? this.getMinutes(pace) : null,
       paceSeconds: pace ? this.getSeconds(pace) : null
     });
+  };
+
+  // Get pace (in seconds)
+
+  getPace = () => {
+    return this.state.paceHours * this.unit.hour + this.state.paceMinutes * this.unit.minute + this.state.paceSeconds * this.unit.second;
+  };
+
+  // Get pace output (in hours, minutes and seconds)
+
+  getPaceOutput = (pace) => {
+    return this.getHours(pace) + ':' + this.getMinutes(pace) + ':' + this.getSeconds(pace);
   };
 
   // Clear pace input fields
@@ -188,22 +221,31 @@ class mypace extends Component {
   // Time conversions
   //
 
-  // Get hours output from seconds
+  // Get hours output (from seconds)
 
-  getHours = (seconds) => {
-    return Math.floor(seconds / this.unit.hour) ? Math.floor(seconds / this.unit.hour).toString() : "00";
+  getHours = (s) => {
+    let hours = Math.floor(s / this.unit.hour);
+    return hours ? this.zeroPrefix(hours).toString() : '00';
   };
 
-  // Get minutes output from seconds
+  // Get minutes output (from seconds)
 
-  getMinutes = (seconds) => {
-    return Math.floor((seconds % this.unit.hour) / this.unit.minute) ? Math.floor((seconds % this.unit.hour) / this.unit.minute).toString() : "00";
+  getMinutes = (s) => {
+    let minutes = Math.floor((s % this.unit.hour) / this.unit.minute);
+    return minutes ? this.zeroPrefix(minutes).toString() : '00';
   };
 
-  // Get seconds output from seconds
+  // Get seconds output (from seconds)
 
-  getSeconds = (seconds) => {
-    return (seconds % this.unit.minute) ? (seconds % this.unit.minute).toFixed(0).toString() : "00"
+  getSeconds = (s) => {
+    let seconds = s % this.unit.minute;
+    return seconds ? this.zeroPrefix(seconds.toFixed(0)).toString() : '00';
+  };
+
+  // Add leading zero if needed
+
+  zeroPrefix = (number) => {
+    return number < 10 ? '0' + number : number;
   };
 
 
@@ -275,9 +317,17 @@ class mypace extends Component {
   };
 
   getSavedItemsSorted = () => {
-    let savedItems = this.state.savedItems;
+    return this.state.savedItems.sort((a, b) => a.dist - b.dist ? a.dist - b.dist : a.time - b.time);
+  };
 
-    return savedItems;
+  renderListHeader = () => {
+    return (
+      <View style={styles.listItem}>
+        <Text style={styles.listHeader}>Distance</Text>
+        <Text style={styles.listHeader}>Time</Text>
+        <Text style={styles.listHeader}>Pace</Text>
+      </View>
+    );
   };
 
 
@@ -292,17 +342,24 @@ class mypace extends Component {
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.heading}>Saved</Text>
+
+            <TouchableWithoutFeedback onPress={this.showMainView}>
+              <View>
+                <Text>Calculate</Text>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
 
           <View>
             <FlatList
               style={styles.listContainer}
               data={this.getSavedItemsSorted()}
-              renderItem={({item}) => (
+              ListHeaderComponent={this.renderListHeader}
+              renderItem={({item, index}) => (
                 <View style={styles.listItem}>
-                  <Text style={styles.listData}>{item.dist}</Text>
-                  <Text style={styles.listData}>{item.time}</Text>
-                  <Text style={styles.listData}>{item.pace}</Text>
+                  <Text style={styles.listData}>{this.getDistOutput(item.dist)}</Text>
+                  <Text style={styles.listData}>{this.getTimeOutput(item.time)}</Text>
+                  <Text style={styles.listData}>{this.getPaceOutput(item.pace)}</Text>
                 </View>
               )}
             />
@@ -473,6 +530,12 @@ class mypace extends Component {
 
         <View style={styles.container}>
           <View style={styles.header}>
+            <TouchableWithoutFeedback onPress={this.showMainView}>
+              <View>
+                <Text>Calculate</Text>
+              </View>
+            </TouchableWithoutFeedback>
+
             <Text style={styles.heading}>Config</Text>
           </View>
         </View>
@@ -535,6 +598,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 10,
     marginBottom: 10,
+  },
+  listHeader: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   listData: {
     flex: 1,
