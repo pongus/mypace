@@ -199,7 +199,8 @@ class mypace extends Component {
   // Sort items
 
   getSortedItems = () => {
-    return this.state.savedItems.sort((a, b) => a.dist - b.dist ? a.dist - b.dist : a.time - b.time);
+    let items = this.state.savedItems;
+    return items.length > 1 ? items.sort((a, b) => a.dist - b.dist ? a.dist - b.dist : a.time - b.time) : items;
   };
 
 
