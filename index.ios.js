@@ -361,37 +361,25 @@ class mypace extends Component {
   // Render
   //
 
-  renderListHeader = () => {
-    return (
-      <View style={styles.listItem}>
-        <Text style={styles.listHeader}>Distance</Text>
-        <Text style={styles.listHeader}>Time</Text>
-        <Text style={styles.listHeader}>Pace</Text>
-        <Text style={styles.listHeader}>Remove</Text>
-      </View>
-    );
-  };
-
   render() {
     return (
       <Swiper ref={(swiper) => this.swiper = swiper} loop={false} index={this.state.currentView} showsPagination={false} onMomentumScrollEnd={this.setCurrentView}>
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.heading}>Saved</Text>
-            <Icon style={styles.icon} name='ios-calculator' size={25} onPress={() => this.swiper.scrollBy(1)} />
+            <Icon style={styles.iconHeader} name='ios-arrow-forward' size={25} onPress={() => this.swiper.scrollBy(1)} />
           </View>
 
           <View style={styles.body}>
             <FlatList
               style={styles.listContainer}
               data={this.getSortedItems()}
-              ListHeaderComponent={this.renderListHeader}
               renderItem={({item, index}) => (
                 <View style={styles.listItem}>
                   <Text style={styles.listData}>{this.getDistOutput(item.dist)}</Text>
                   <Text style={styles.listData}>{this.getTimeOutput(item.time)}</Text>
                   <Text style={styles.listData}>{this.getPaceOutput(item.pace)}</Text>
-                  <Text style={styles.listData} onPress={() => this.deleteCalculation(index)}>Delete</Text>
+                  <Icon name="ios-trash-outline" size={20} onPress={() => this.deleteCalculation(index)} />
                 </View>
               )}
             />
@@ -400,9 +388,9 @@ class mypace extends Component {
 
         <View style={styles.container}>
           <View style={styles.header}>
-            <Icon style={styles.icon} name='ios-heart' size={25} onPress={() => this.swiper.scrollBy(-1)} />
+            <Icon style={styles.iconHeader} name='ios-star-outline' size={25} onPress={() => this.swiper.scrollBy(-1)} />
             <Text style={styles.heading}>Calculate</Text>
-            <Icon style={styles.icon} name='ios-settings' size={25} onPress={() => this.swiper.scrollBy(1)} />
+            <Icon style={styles.iconHeader} name='ios-settings-outline' size={25} onPress={() => this.swiper.scrollBy(1)} />
           </View>
 
           <View style={styles.body}>
@@ -411,6 +399,8 @@ class mypace extends Component {
             <Text style={styles.label}>{"Distance".toUpperCase()}</Text>
 
             <View style={styles.inputContainer}>
+              <Icon name="ios-ionic-outline" size={25} style={styles.iconInput} />
+
               <TextInput
                 ref="1"
                 autoFocus={true}
@@ -423,17 +413,15 @@ class mypace extends Component {
                 onSubmitEditing={() => this.focusNextField(1)}
                 style={styles.input}
               />
-            </View>
 
-            <TouchableWithoutFeedback onPress={this.clearDist}>
-              <View>
-                <Text>Clear</Text>
-              </View>
-            </TouchableWithoutFeedback>
+              <Icon name="ios-close-outline" size={35} style={styles.iconClear} onPress={this.clearDist} />
+            </View>
 
             <Text style={styles.label}>{"Time".toUpperCase()}</Text>
 
             <View style={styles.inputContainer}>
+              <Icon name="ios-clock-outline" size={25} style={styles.iconInput} />
+
               <TextInput
                 ref="2"
                 placeholder="HH"
@@ -469,17 +457,15 @@ class mypace extends Component {
                 onSubmitEditing={() => this.focusNextField(4)}
                 style={styles.input}
               />
-            </View>
 
-            <TouchableWithoutFeedback onPress={this.clearTime}>
-              <View>
-                <Text>Clear</Text>
-              </View>
-            </TouchableWithoutFeedback>
+              <Icon name="ios-close-outline" size={35} style={styles.iconClear} onPress={this.clearTime} />
+            </View>
 
             <Text style={styles.label}>{'Pace'.toUpperCase()}</Text>
 
             <View style={styles.inputContainer}>
+              <Icon name="ios-speedometer-outline" size={25} style={styles.iconInput} />
+
               <TextInput
                 ref="5"
                 placeholder="HH"
@@ -514,13 +500,9 @@ class mypace extends Component {
                 onEndEditing={this.updateButtonStatus}
                 style={styles.input}
               />
-            </View>
 
-            <TouchableWithoutFeedback onPress={this.clearPace}>
-              <View>
-                <Text>Clear</Text>
-              </View>
-            </TouchableWithoutFeedback>
+              <Icon name="ios-close-outline" size={35} style={styles.iconClear} onPress={this.clearPace} />
+            </View>
 
             <View style={styles.actionContainer}>
               <Button
@@ -546,7 +528,7 @@ class mypace extends Component {
 
         <View style={styles.container}>
           <View style={styles.header}>
-            <Icon style={styles.icon} name='ios-calculator' size={25} onPress={() => this.swiper.scrollBy(-1)} />
+            <Icon style={styles.iconHeader} name='ios-arrow-back' size={25} onPress={() => this.swiper.scrollBy(-1)} />
             <Text style={styles.heading}>Config</Text>
           </View>
 
@@ -564,10 +546,20 @@ class mypace extends Component {
 //
 
 const styles = StyleSheet.create({
-  icon: {
+  iconHeader: {
     color: '#FFF',
     paddingLeft: 30,
     paddingRight: 30,
+  },
+  iconInput: {
+    paddingTop: 15,
+    paddingRight: 20,
+    color: '#333',
+  },
+  iconClear: {
+    paddingTop: 8,
+    paddingLeft: 20,
+    color: '#333',
   },
   container: {
     flex: 1,
@@ -603,18 +595,21 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   inputContainer: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignSelf: 'center',
   },
   label: {
     marginTop: 20,
-    marginBottom: 5,
+    marginBottom: 10,
     color: '#333',
+    fontSize: 16,
+    textAlign: 'center'
   },
   input: {
     flex: 1,
     height: 50,
     backgroundColor: '#FFF',
-    fontSize: 16,
+    fontSize: 18,
     textAlign: 'center',
   },
   description: {
@@ -627,13 +622,8 @@ const styles = StyleSheet.create({
   },
   listItem: {
     flexDirection: 'row',
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  listHeader: {
-    flex: 1,
-    fontSize: 16,
-    fontWeight: 'bold',
+    marginTop: 5,
+    marginBottom: 5,
   },
   listData: {
     flex: 1,
