@@ -16,6 +16,8 @@ import {
 
 import Swiper from 'react-native-swiper';
 
+import Icon from 'react-native-vector-icons/Ionicons';
+
 
 
 // 
@@ -42,6 +44,7 @@ import Swiper from 'react-native-swiper';
 // * Kilometer vs mile setting
 // * Get splits
 // * Get negative splits
+// * Export splits, email?
 //
 
 
@@ -375,7 +378,7 @@ class mypace extends Component {
         <View style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.heading}>Saved</Text>
-            <Text style={styles.navigation} onPress={() => this.swiper.scrollBy(1)}>Calculate</Text>
+            <Icon style={styles.icon} name='ios-calculator' size={25} onPress={() => this.swiper.scrollBy(1)} />
           </View>
 
           <View style={styles.body}>
@@ -397,9 +400,9 @@ class mypace extends Component {
 
         <View style={styles.container}>
           <View style={styles.header}>
-            <Text style={styles.navigation} onPress={() => this.swiper.scrollBy(-1)}>Saved</Text>
+            <Icon style={styles.icon} name='ios-heart' size={25} onPress={() => this.swiper.scrollBy(-1)} />
             <Text style={styles.heading}>Calculate</Text>
-            <Text style={styles.navigation} onPress={() => this.swiper.scrollBy(1)}>Config</Text>
+            <Icon style={styles.icon} name='ios-settings' size={25} onPress={() => this.swiper.scrollBy(1)} />
           </View>
 
           <View style={styles.body}>
@@ -543,7 +546,7 @@ class mypace extends Component {
 
         <View style={styles.container}>
           <View style={styles.header}>
-            <Text style={styles.navigation} onPress={() => this.swiper.scrollBy(-1)}>Calculate</Text>
+            <Icon style={styles.icon} name='ios-calculator' size={25} onPress={() => this.swiper.scrollBy(-1)} />
             <Text style={styles.heading}>Config</Text>
           </View>
 
@@ -561,6 +564,11 @@ class mypace extends Component {
 //
 
 const styles = StyleSheet.create({
+  icon: {
+    color: '#FFF',
+    paddingLeft: 30,
+    paddingRight: 30,
+  },
   container: {
     flex: 1,
     backgroundColor: '#F7F7F7'
