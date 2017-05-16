@@ -22,9 +22,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 // 
 // TODO:
-// * Replace text with icons
 // * Basic calculate button styling
-// * Basic header styling
 // * Add a distance quick list:
 //  * Road Events:
 //    * 5 km
