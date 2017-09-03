@@ -546,8 +546,8 @@ class mypace extends Component {
 const styles = StyleSheet.create({
   iconHeader: {
     color: '#FFF',
-    paddingLeft: 30,
-    paddingRight: 30,
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   iconInput: {
     paddingTop: 15,
@@ -597,7 +597,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   label: {
-    marginTop: 20,
+    marginTop: 25,
     marginBottom: 10,
     color: '#333',
     fontSize: 16,
